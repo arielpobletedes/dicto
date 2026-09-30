@@ -1,0 +1,25 @@
+{
+  "name": "@ptt/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Configuración compartida: TypeScript, ESLint, Prettier y Tailwind.",
+  "exports": {
+    "./tsconfig/*": "./tsconfig/*",
+    "./eslint/base": "./eslint/base.mjs",
+    "./eslint/next": "./eslint/next.mjs",
+    "./prettier": "./prettier/index.mjs",
+    "./tailwind.css": "./tailwind/theme.css"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint-config-next": "^16.3.7",
+    "eslint-config-prettier": "^10.0.0",
+    "globals": "^16.0.0",
+    "typescript-eslint": "^8.71.0"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0"
+  }
+}

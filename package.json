@@ -1,0 +1,43 @@
+{
+  "name": "protouchtyping",
+  "version": "0.0.0",
+  "private": true,
+  "description": "ProTouchTyping: aprende y mejora tu dactilografía escribiendo código.",
+  "packageManager": "pnpm@12.8.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -n web,types -c cyan,yellow \"pnpm --filter @ptt/web dev\" \"pnpm -r --parallel --filter \\\"./packages/*\\\" typecheck:watch\"",
+    "build": "pnpm --filter @ptt/web build",
+    "start": "pnpm --filter @ptt/web start",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test",
+    "clean": "rimraf node_modules \"apps/*/node_modules\" \"packages/*/node_modules\" apps/web/.next",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@ptt/config": "workspace:*",
+    "concurrently": "^10.0.5",
+    "eslint": "^9.39.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "rimraf": "^6.1.3",
+    "typescript": "catalog:"
+  }
+}

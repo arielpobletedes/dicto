@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Versiones compartidas entre workspaces (se usan como "catalog:" en cada package.json)
+allowBuilds:
+  unrs-resolver: false
+
+catalog:
+  typescript: ^5.9.3
+  vitest: ^4.1.11
+  zod: ^4.6.5
+  "@types/node": ^22.0.0

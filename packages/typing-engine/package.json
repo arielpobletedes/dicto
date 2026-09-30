@@ -1,0 +1,20 @@
+{
+  "name": "@ptt/typing-engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Lógica pura del motor de mecanografía: métricas y comparación de texto.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch --preserveWatchOutput",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@ptt/config": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

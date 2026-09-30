@@ -1,0 +1,23 @@
+{
+  "name": "@ptt/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Esquemas Zod, tipos y constantes compartidos.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch --preserveWatchOutput",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@ptt/config": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

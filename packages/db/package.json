@@ -1,0 +1,20 @@
+{
+  "name": "@ptt/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Drizzle ORM: schema, migraciones, seeds y cliente Neon (Fase 1).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch --preserveWatchOutput",
+    "test": "vitest run --passWithNoTests"
+  },
+  "devDependencies": {
+    "@ptt/config": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
