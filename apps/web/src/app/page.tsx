@@ -82,13 +82,14 @@ export default function HomePage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600/10 border border-blue-500/20 text-blue-400">
               <Code2 className="h-6 w-6" />
             </div>
-            <h3 className="text-lg font-bold text-white">Símbolos Especiales</h3>
+            <h3 className="text-lg font-bold text-white">Símbolos y Teclados Locales</h3>
             <p className="text-sm text-slate-400">
-              Entrena caracteres como{" "}
+              Soporte nativo para <strong>Español Latinoamericano (Chile)</strong> e{" "}
+              <strong>Inglés US</strong>. Entrena caracteres como{" "}
               <code className="rounded bg-slate-800 px-1 py-0.5 font-mono text-xs text-blue-300">
-                {"{ } [ ] ( ) < > | \\ ` ~ ^ $ # @ & ; :"}
+                {"{ } [ ] ( ) < > | \\ ` ~ ^ $ # @ & ; : ñ"}
               </code>{" "}
-              y combinaciones AltGr para teclados internacionales.
+              con combinaciones AltGr y Shift adaptadas a tu teclado físico real.
             </p>
           </div>
 

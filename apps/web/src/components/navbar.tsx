@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
 import { Keyboard, LayoutDashboard, Shield, LogOut, LogIn, UserPlus } from "lucide-react";
+import { KeyboardLayoutSelector } from "./keyboard-layout-selector";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -60,6 +61,8 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Selector de Teclado (Latam Chile vs US) */}
+          <KeyboardLayoutSelector variant="compact" />
           {isPending ? (
             <div className="h-8 w-24 bg-slate-800 animate-pulse rounded-md" />
           ) : user ? (

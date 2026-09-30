@@ -5,12 +5,13 @@ import Link from "next/link";
 import {
   createTypingSession,
   handleKeystroke,
-  getKeyGuidance,
-  type KeyGuidance,
+  getCurrentKeyGuidance,
   type SessionMetrics,
   type TypingSession,
 } from "@ptt/typing-engine";
 import { VirtualKeyboard } from "./virtual-keyboard";
+import { useKeyboardLayout } from "./keyboard-layout-context";
+import { KeyboardLayoutSelector } from "./keyboard-layout-selector";
 import {
   RotateCcw,
   Trophy,
@@ -38,6 +39,7 @@ interface PracticeViewProps {
 }
 
 export function PracticeView({ exercise, nextExerciseId }: PracticeViewProps) {
+  const { layout } = useKeyboardLayout();
   const [session, setSession] = useState<TypingSession>(() =>
     createTypingSession(exercise.content),
   );
@@ -52,15 +54,15 @@ export function PracticeView({ exercise, nextExerciseId }: PracticeViewProps) {
     correctKeystrokes: 0,
     progressPercent: 0,
   }));
-  const [guidance, setGuidance] = useState<KeyGuidance | null>(() =>
-    exercise.content.length > 0 ? getKeyGuidance(exercise.content[0]!) : null,
-  );
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveResult, setSaveResult] = useState<{
     isNewBestWpm?: boolean;
     error?: string;
   } | null>(null);
+
+  // Guía de tecla derivada directamente de la sesión actual y la distribución seleccionada
+  const guidance = getCurrentKeyGuidance(session, layout);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -81,7 +83,6 @@ export function PracticeView({ exercise, nextExerciseId }: PracticeViewProps) {
       correctKeystrokes: 0,
       progressPercent: 0,
     });
-    setGuidance(fresh.targetText.length > 0 ? getKeyGuidance(fresh.targetText[0]!) : null);
   }, [exercise.content]);
 
   const saveAttempt = useCallback(
@@ -160,20 +161,22 @@ export function PracticeView({ exercise, nextExerciseId }: PracticeViewProps) {
 
       const {
         session: newSession,
-        keyGuidance,
         metrics: newMetrics,
         completedJustNow,
-      } = handleKeystroke(session, {
-        key: e.key,
-        code: e.code,
-        altKey: e.altKey,
-        ctrlKey: e.ctrlKey,
-        metaKey: e.metaKey,
-        timestamp: Date.now(),
-      });
+      } = handleKeystroke(
+        session,
+        {
+          key: e.key,
+          code: e.code,
+          altKey: e.altKey,
+          ctrlKey: e.ctrlKey,
+          metaKey: e.metaKey,
+          timestamp: Date.now(),
+        },
+        layout,
+      );
 
       setSession(newSession);
-      setGuidance(keyGuidance);
       setMetrics(newMetrics);
 
       if (completedJustNow) {
@@ -181,7 +184,7 @@ export function PracticeView({ exercise, nextExerciseId }: PracticeViewProps) {
         saveAttempt(newSession, newMetrics);
       }
     },
-    [session, restartExercise, saveAttempt],
+    [session, restartExercise, saveAttempt, layout],
   );
 
   useEffect(() => {
@@ -222,7 +225,10 @@ export function PracticeView({ exercise, nextExerciseId }: PracticeViewProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Selector de Teclado físico rápido */}
+          <KeyboardLayoutSelector variant="compact" />
+
           <span className="rounded-md bg-blue-950/80 px-2.5 py-1 text-xs font-mono font-medium text-blue-300 border border-blue-800/50">
             {exercise.language}
           </span>
@@ -333,7 +339,7 @@ export function PracticeView({ exercise, nextExerciseId }: PracticeViewProps) {
       </div>
 
       {/* Teclado virtual sincronizado */}
-      <VirtualKeyboard activeGuidance={guidance} />
+      <VirtualKeyboard activeGuidance={guidance} layout={layout} />
 
       {/* Modal / Resumen final de ejercicio */}
       {isCompleted && (

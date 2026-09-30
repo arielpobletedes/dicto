@@ -5,6 +5,7 @@ import {
   calculateWpm,
 } from "./metrics";
 import { getKeyGuidance, type KeyGuidance } from "./keyboard";
+import type { KeyboardLayout } from "@ptt/shared";
 
 export type CharState = "pending" | "correct" | "incorrect" | "extra";
 
@@ -86,6 +87,7 @@ const IGNORED_KEYS = new Set([
   "Meta",
   "CapsLock",
   "Escape",
+  "Dead",
   "ArrowUp",
   "ArrowDown",
   "ArrowLeft",
@@ -122,6 +124,7 @@ const IGNORED_KEYS = new Set([
 export function handleKeystroke(
   session: TypingSession,
   event: KeystrokeEvent,
+  layout: KeyboardLayout = "latam",
 ): {
   session: TypingSession;
   keyGuidance: KeyGuidance | null;
@@ -144,7 +147,7 @@ export function handleKeystroke(
   if (IGNORED_KEYS.has(key) || event.ctrlKey || event.metaKey) {
     return {
       session,
-      keyGuidance: getCurrentKeyGuidance(session),
+      keyGuidance: getCurrentKeyGuidance(session, layout),
       metrics: getSessionMetrics(session),
       completedJustNow: false,
     };
@@ -179,7 +182,7 @@ export function handleKeystroke(
     };
     return {
       session: updatedSession,
-      keyGuidance: getCurrentKeyGuidance(updatedSession),
+      keyGuidance: getCurrentKeyGuidance(updatedSession, layout),
       metrics: getSessionMetrics(updatedSession, now),
       completedJustNow: false,
     };
@@ -235,7 +238,7 @@ export function handleKeystroke(
 
       return {
         session: updatedSession,
-        keyGuidance: getCurrentKeyGuidance(updatedSession),
+        keyGuidance: getCurrentKeyGuidance(updatedSession, layout),
         metrics: getSessionMetrics(updatedSession, now),
         completedJustNow: isFinished,
       };
@@ -293,7 +296,7 @@ export function handleKeystroke(
 
   return {
     session: updatedSession,
-    keyGuidance: getCurrentKeyGuidance(updatedSession),
+    keyGuidance: getCurrentKeyGuidance(updatedSession, layout),
     metrics: getSessionMetrics(updatedSession, now),
     completedJustNow: isFinished,
   };
@@ -316,12 +319,15 @@ function recordKeyStat(keyStats: Record<string, KeyStatsRecord>, key: string, is
   }
 }
 
-export function getCurrentKeyGuidance(session: TypingSession): KeyGuidance | null {
+export function getCurrentKeyGuidance(
+  session: TypingSession,
+  layout: KeyboardLayout = "latam",
+): KeyGuidance | null {
   if (session.isFinished || session.cursorIndex >= session.targetText.length) {
     return null;
   }
   const nextChar = session.targetText[session.cursorIndex]!;
-  return getKeyGuidance(nextChar);
+  return getKeyGuidance(nextChar, layout);
 }
 
 export function getSessionMetrics(session: TypingSession, currentTimeMs?: number): SessionMetrics {

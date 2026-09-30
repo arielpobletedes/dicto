@@ -111,4 +111,38 @@ describe("TypingSession", () => {
     expect(r2.metrics.accuracy).toBe(100);
     expect(r2.metrics.wpm).toBeGreaterThan(0);
   });
+
+  it("ignora teclas muertas (Dead) y modificadores sin avanzar ni contar error", () => {
+    let session = createTypingSession("ñandú");
+    const t0 = 1000;
+
+    // Pulsación de tecla muerta en teclado latinoamericano en Windows
+    const deadRes = handleKeystroke(session, { key: "Dead", timestamp: t0 });
+    session = deadRes.session;
+    expect(session.cursorIndex).toBe(0);
+    expect(session.totalKeystrokes).toBe(0);
+    expect(session.errorKeystrokes).toBe(0);
+
+    // Pulsación de Shift aislado
+    const shiftRes = handleKeystroke(session, { key: "Shift", timestamp: t0 + 10 });
+    session = shiftRes.session;
+    expect(session.cursorIndex).toBe(0);
+    expect(session.totalKeystrokes).toBe(0);
+
+    // Carácter real 'ñ'
+    const charRes = handleKeystroke(session, { key: "ñ", timestamp: t0 + 50 }, "latam");
+    expect(charRes.session.cursorIndex).toBe(1);
+    expect(charRes.session.correctKeystrokes).toBe(1);
+  });
+
+  it("ofrece keyGuidance coherente con el layout especificado", () => {
+    const session = createTypingSession(";");
+    const resLatam = handleKeystroke(session, { key: "Shift" }, "latam");
+    expect(resLatam.keyGuidance?.code).toBe("Comma");
+    expect(resLatam.keyGuidance?.shiftRequired).toBe(true);
+
+    const resUS = handleKeystroke(session, { key: "Shift" }, "us");
+    expect(resUS.keyGuidance?.code).toBe("Semicolon");
+    expect(resUS.keyGuidance?.shiftRequired).toBe(false);
+  });
 });

@@ -1,12 +1,14 @@
 "use client";
 
-import { type KeyGuidance, US_KEYBOARD_ROWS, type Finger } from "@ptt/typing-engine";
-import type { KeyAccuracyStat } from "@ptt/shared";
+import { type KeyGuidance, type Finger, getKeyboardRows } from "@ptt/typing-engine";
+import type { KeyAccuracyStat, KeyboardLayout } from "@ptt/shared";
+import { useKeyboardLayout } from "./keyboard-layout-context";
 
 interface VirtualKeyboardProps {
   activeGuidance?: KeyGuidance | null;
   heatmap?: Record<string, KeyAccuracyStat> | null;
   showFingerGuide?: boolean;
+  layout?: KeyboardLayout;
 }
 
 const FINGER_COLORS: Record<Finger, string> = {
@@ -25,7 +27,13 @@ export function VirtualKeyboard({
   activeGuidance,
   heatmap,
   showFingerGuide = true,
+  layout: propLayout,
 }: VirtualKeyboardProps) {
+  const { layout: contextLayout } = useKeyboardLayout();
+  const currentLayout = propLayout ?? contextLayout;
+
+  const keyboardRows = getKeyboardRows(currentLayout);
+
   const activeCode = activeGuidance?.code;
   const needShift = activeGuidance?.shiftRequired;
   const needAltGr = activeGuidance?.altGrRequired;
@@ -52,7 +60,7 @@ export function VirtualKeyboard({
 
       {/* Filas del teclado virtual */}
       <div className="flex flex-col gap-1.5 select-none font-mono">
-        {US_KEYBOARD_ROWS.map((row, rowIndex) => (
+        {keyboardRows.map((row, rowIndex) => (
           <div key={rowIndex} className="flex justify-center gap-1.5">
             {row.map((key) => {
               const isKeyActive = key.code === activeCode;
@@ -63,7 +71,10 @@ export function VirtualKeyboard({
               // Estilo de mapa de calor si está activo
               let heatmapColor = "";
               if (heatmap) {
-                const stat = heatmap[key.label] || (key.shiftLabel && heatmap[key.shiftLabel]);
+                const stat =
+                  heatmap[key.label] ||
+                  (key.shiftLabel && heatmap[key.shiftLabel]) ||
+                  (key.altGrLabel && heatmap[key.altGrLabel]);
                 if (stat) {
                   if (stat.accuracy >= 95) {
                     heatmapColor = "bg-emerald-600/40 border-emerald-500 text-emerald-200";
@@ -82,7 +93,7 @@ export function VirtualKeyboard({
                 <div
                   key={key.code}
                   className={`
-                    relative flex flex-col items-center justify-center rounded-lg border h-10 sm:h-12 text-xs transition-all duration-150
+                    relative flex flex-col items-center justify-between py-1 px-1 rounded-lg border h-10 sm:h-12 text-xs transition-all duration-150
                     ${customWidth}
                     ${heatmapColor || baseColor}
                     ${
@@ -97,11 +108,14 @@ export function VirtualKeyboard({
                     }
                   `}
                 >
-                  {/* Etiqueta con Shift si existe */}
-                  {key.shiftLabel && (
-                    <span className="text-[10px] opacity-75">{key.shiftLabel}</span>
-                  )}
-                  <span className="font-semibold">{key.label}</span>
+                  {/* Fila superior de símbolos auxiliares (Shift y AltGr) */}
+                  <div className="flex w-full justify-between items-center px-0.5 text-[9px] leading-none opacity-75">
+                    <span>{key.shiftLabel ?? ""}</span>
+                    <span className="text-amber-300/90 font-mono">{key.altGrLabel ?? ""}</span>
+                  </div>
+
+                  {/* Símbolo principal */}
+                  <span className="font-semibold text-xs sm:text-sm leading-none">{key.label}</span>
                 </div>
               );
             })}

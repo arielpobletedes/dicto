@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/server/auth";
 import { getUserDashboardStats } from "@/server/stats";
 import { VirtualKeyboard } from "@/components/virtual-keyboard";
+import { KeyboardLayoutSelector } from "@/components/keyboard-layout-selector";
 import {
   Trophy,
   Gauge,
@@ -152,7 +153,8 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-medium">
+          <div className="flex flex-wrap items-center gap-4 text-xs font-medium">
+            <KeyboardLayoutSelector variant="compact" />
             <div className="flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-full bg-emerald-500" />
               <span className="text-slate-300">&gt; 95% precisión</span>
