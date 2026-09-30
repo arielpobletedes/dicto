@@ -18,6 +18,10 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "check": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test",
+    "db:generate": "pnpm --filter @ptt/db db:generate",
+    "db:migrate": "pnpm --filter @ptt/db db:migrate",
+    "db:seed": "pnpm --filter @ptt/db db:seed",
+    "db:studio": "pnpm --filter @ptt/db db:studio",
     "clean": "rimraf node_modules \"apps/*/node_modules\" \"packages/*/node_modules\" apps/web/.next",
     "prepare": "husky"
   },

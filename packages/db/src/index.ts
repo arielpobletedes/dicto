@@ -1,2 +1,6 @@
-// Fase 1: aquí se exportarán el cliente de Drizzle (Neon) y el schema.
-export {};
+export * from "./client";
+export * from "./env";
+export * from "./schema";
+export * from "./seeds/data";
+export * from "./seeds/seed";
+export { eq, asc, desc, and, sql, or } from "drizzle-orm";

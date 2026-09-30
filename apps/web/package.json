@@ -15,9 +15,13 @@
     "@ptt/db": "workspace:*",
     "@ptt/shared": "workspace:*",
     "@ptt/typing-engine": "workspace:*",
+    "better-auth": "^1.7.6",
+    "drizzle-orm": "^0.45.3",
+    "lucide-react": "^1.48.0",
     "next": "^16.3.7",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@ptt/config": "workspace:*",

@@ -5,6 +5,7 @@ packages:
 # Versiones compartidas entre workspaces (se usan como "catalog:" en cada package.json)
 allowBuilds:
   unrs-resolver: false
+  esbuild: true
 
 catalog:
   typescript: ^5.9.3

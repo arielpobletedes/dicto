@@ -10,11 +10,25 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch --preserveWatchOutput",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx src/seeds/run.ts"
   },
   "devDependencies": {
     "@ptt/config": "workspace:*",
+    "@types/node": "catalog:",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@ptt/shared": "workspace:*",
+    "dotenv": "^18.0.4",
+    "drizzle-orm": "^0.45.3"
   }
 }
